@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import type { FC, PropsWithChildren, Ref, StyleHTMLAttributes } from 'react';
-import { Children, cloneElement, isValidElement } from 'react';
+import type { CSSProperties, FC, PropsWithChildren, Ref, StyleHTMLAttributes } from 'react';
+import { Children, cloneElement, isValidElement, useId } from 'react';
 import type { Props as TabProps } from './Tab';
 import Tab from './Tab';
 import './styles.scss';
@@ -16,6 +16,9 @@ interface Props {
 }
 
 const Tabs: FC<PropsWithChildren<Props>> = ({ value, title, onChange, className, children, ref, style, condensed }) => {
+  const rawId = useId();
+  const anchorName = `--anchor-tabs-${rawId.replace(/:/g, '')}`;
+
   const renderedChildren = Children.map(children, (child) => {
     if (!isValidElement<TabProps>(child) || child.type !== Tab) {
       return child;
@@ -23,12 +26,17 @@ const Tabs: FC<PropsWithChildren<Props>> = ({ value, title, onChange, className,
 
     return cloneElement(child, {
       onChange,
-      isActive: child.props.id === value,
+      isSelected: child.props.id === value,
     });
   });
 
+  const styleAttr = {
+    '--dynamic-anchor': anchorName,
+    ...style,
+  } as CSSProperties;
+
   return (
-    <div className={classNames('haiku-tabs', className, { condensed })} ref={ref} style={style}>
+    <div className={classNames('haiku-tabs', className, { condensed })} ref={ref} style={styleAttr}>
       {!!title && <span className="haiku-tabs-title">{title}</span>}
       {renderedChildren}
     </div>

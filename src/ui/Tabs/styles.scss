@@ -1,5 +1,43 @@
 .haiku-tabs {
   display: flex;
+  isolation: isolate;
+  anchor-name: var(--dynamic-anchor);
+
+  button.button-text.is-selected {
+    anchor-name: var(--dynamic-anchor);
+  }
+
+  &::before {
+    position-anchor: var(--dynamic-anchor);
+    pointer-events: none;
+    border: 1px solid oklch(from var(--primary) l c h / 0.6);
+
+    content: '';
+    position: absolute;
+    z-index: 1;
+
+    top: calc(anchor(bottom) - 3px);
+    left: calc(anchor(left) + 0.25rem);
+    right: calc(anchor(right) + 0.25rem);
+    border-radius: 10px;
+
+    transition: 500ms
+      linear(
+        0,
+        0.029 1.6%,
+        0.123 3.5%,
+        0.651 10.6%,
+        0.862 14.1%,
+        1.002 17.7%,
+        1.046 19.6%,
+        1.074 21.6%,
+        1.087 23.9%,
+        1.086 26.6%,
+        1.014 38.5%,
+        0.994 46.3%,
+        1
+      );
+  }
 
   &.condensed {
     gap: 4px;
@@ -39,6 +77,8 @@
   }
 
   .tab {
+    z-index: 2;
+
     min-width: auto;
     border-radius: 0;
     box-sizing: border-box;
@@ -49,13 +89,9 @@
     white-space: pre;
     text-transform: none;
 
-    &:hover {
-      color: var(--tertiary);
-      background-color: oklch(from var(--tertiary) l c h / 0.15);
-    }
-
-    &.is-active {
-      border-bottom: 3px solid oklch(from var(--primary) l c h / 0.6);
+    &.is-selected {
+      border-bottom: 3px solid oklch(from var(--primary) l c h);
+      transition: border 1s;
     }
   }
 }

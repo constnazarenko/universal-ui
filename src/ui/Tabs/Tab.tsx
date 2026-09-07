@@ -1,6 +1,6 @@
-import Button from '@mui/material/Button';
 import classNames from 'classnames';
 import type { FC, PropsWithChildren } from 'react';
+import Button from '../Button';
 
 export interface Props {
   id: string | number;
@@ -8,16 +8,13 @@ export interface Props {
   onClick?(value: string | number): void;
   onChange?(value: string | number): void;
   disabled?: boolean;
-  isActive?: boolean;
+  isSelected?: boolean;
 }
 
-const Tab: FC<PropsWithChildren<Props>> = ({ id, onClick, onChange, className, children, disabled, isActive }) => {
+const Tab: FC<PropsWithChildren<Props>> = ({ id, onClick, onChange, className, children, disabled, isSelected }) => {
   return (
-    <Button
-      className={classNames('tab', className, { 'is-active': isActive })}
-      size="small"
-      variant="text"
-      color="inherit"
+    <Button.Text
+      className={classNames('tab', className, { 'is-selected': isSelected })}
       disabled={disabled}
       onClick={() => {
         onChange?.(id);
@@ -25,7 +22,7 @@ const Tab: FC<PropsWithChildren<Props>> = ({ id, onClick, onChange, className, c
       }}
     >
       {children}
-    </Button>
+    </Button.Text>
   );
 };
 
