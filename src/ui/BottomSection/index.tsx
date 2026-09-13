@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import { useState } from 'react';
-
 import GreenButton from '../GreenButton';
 import './styles.scss';
 

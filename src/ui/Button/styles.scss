@@ -1,6 +1,11 @@
+@property --button-gradient-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
+
 .button-general {
   position: relative;
-  overflow: hidden;
   --btn-color: var(--text-primary);
 
   display: inline-flex;
@@ -10,9 +15,6 @@
   user-select: none;
   cursor: pointer;
 
-  &:not(.button-text) {
-    border: 1px solid color-mix(in oklab, var(--btn-color) 30%, transparent);
-  }
   border-radius: 3px;
 
   color: var(--btn-color);
@@ -32,6 +34,42 @@
     background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
+  &:active {
+    transform: translateY(1px) scale(calc((100vw - 1px) / 100vw));
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    filter: grayscale(100);
+  }
+
+  &:disabled {
+    filter: grayscale(100);
+  }
+
+  > svg {
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+  }
+}
+
+.button-general:not(.button-epic):not(.button-legendary):not(.button-text) {
+  border: 1px solid color-mix(in oklab, var(--btn-color) 30%, transparent);
+}
+.button-general:not(.button-epic):not(.button-legendary):not(.button-filled) {
+  &:hover:not(:disabled) {
+    background-color: oklch(from var(--btn-color) l c h / 0.15);
+
+    &:not(.button-text) {
+      border-color: var(--btn-color) 20%;
+    }
+  }
+}
+.button-general:not(.button-epic):not(.button-legendary) {
+  overflow: hidden;
+
   &::after {
     content: '';
     position: absolute;
@@ -50,34 +88,6 @@
     transform: translate(-50%, -50%) scale(2.5);
     opacity: 1;
     transition: transform 0.8s ease-out;
-  }
-
-  &:active {
-    transform: translateY(1px) scale(calc((100vw - 1px) / 100vw));
-  }
-
-  &:hover:not(:disabled) {
-    background-color: oklch(from var(--btn-color) l c h / 0.15);
-
-    &:not(.button-text) {
-      border-color: var(--btn-color) 20%;
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    filter: grayscale(100);
-  }
-
-  &:disabled {
-    filter: grayscale(100);
-  }
-
-  > svg {
-    width: 1em;
-    height: 1em;
-    margin-right: 0.5em;
-    vertical-align: middle;
   }
 }
 
@@ -106,15 +116,141 @@
 }
 
 .button-epic {
-  --btn-color: oklch(from var(--secondary) 70% 0.2 h);
+  background: var(--secondary);
+  text-transform: uppercase;
+  font-family: Orbitron, sans-serif;
+  cursor: pointer;
+  position: relative;
+  color: var(--text-inverted);
+  text-shadow:
+    var(--text-primary) 0.5px 0.5px 1px,
+    var(--text-primary) 0 0 1px,
+    var(--text-primary) 0 0 1px;
+
+  &:hover {
+    background: var(--secondary);
+
+    &::before {
+      content: '';
+      background: conic-gradient(
+        from var(--button-gradient-angle),
+        var(--beacon-0),
+        var(--beacon-1),
+        var(--beacon-2),
+        var(--beacon-3),
+        var(--beacon-4),
+        var(--beacon-3),
+        var(--beacon-2),
+        var(--beacon-1),
+        var(--beacon-0)
+      );
+      border-radius: inherit;
+      color: var(--text-inverted);
+      position: absolute;
+      inset: -2px;
+      box-shadow: 0 0 15px var(--beacon-3);
+      z-index: 1;
+      animation: rotation 2s linear infinite;
+      @keyframes rotation {
+        0% {
+          --button-gradient-angle: 360deg;
+        }
+
+        100% {
+          --button-gradient-angle: 0deg;
+        }
+      }
+    }
+
+    &::after {
+      display: flex;
+      content: attr(data-after);
+      justify-content: center;
+      align-items: center;
+      background: var(--primary);
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      color: var(--text-inverted);
+    }
+  }
 }
 
 .button-legendary {
-  --btn-color: oklch(from var(--primary) 70% 0.2 h);
+  text-transform: uppercase;
+  font-family: Orbitron, sans-serif;
+
+  &::before {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    inset: -3px;
+    background: conic-gradient(
+      from var(--angle),
+      var(--beacon-1),
+      var(--beacon-2),
+      var(--beacon-3),
+      var(--beacon-3),
+      var(--beacon-2),
+      var(--beacon-1)
+    );
+    border-radius: inherit;
+    animation:
+      rotate 3s linear infinite,
+      pulsate 3s linear infinite;
+    animation-play-state: running;
+    transition: inset 3s;
+    box-shadow: 0 0 5px var(--beacon-3);
+  }
+  &:hover::before {
+    inset: -10px;
+  }
+
+  &::after {
+    content: attr(data-after);
+    z-index: 2;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-transform: uppercase;
+    font-family: Orbitron, sans-serif;
+    color: var(--text-inverted);
+    text-shadow:
+      var(--text-primary) 0.5px 0.5px 1px,
+      var(--text-primary) 0 0 1px,
+      var(--text-primary) 0 0 1px;
+    background: var(--secondary);
+    transition: background-color 2s;
+  }
+  &:hover::after {
+    background: var(--primary);
+  }
 }
 
 .button-text {
   border: none;
   line-height: 1.25em;
   font-size: 0.75em;
+}
+
+.button-filled {
+  border-radius: 3px;
+  background-color: var(--btn-color);
+  color: var(--text-inverted);
+
+  &:hover:not(:disabled) {
+    // background-color: color-mix(in oklab, var(--btn-color) 80%, transparent);
+    // // background-color: var(--text-primary);
+    // color: oklch(from var(--btn-color) 0.3 c h / 0.8);
+    filter: brightness(0.85);
+  }
+
+  &:active::after {
+    display: none;
+  }
 }
