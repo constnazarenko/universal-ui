@@ -238,7 +238,7 @@
   font-size: 0.75em;
 }
 
-.button-filled {
+.button-filled:not(.button-epic):not(.button-legendary) {
   border-radius: 3px;
   background-color: var(--btn-color);
   color: var(--text-inverted);
